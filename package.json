@@ -1,12 +1,13 @@
 {
-  "name": "grenxharimau-api",
+  "name": "grenxharimau-ai-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "API AI Chat gratis via DuckDuckGo Scrape",
+  "main": "ai-api.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ai-api.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "axios": "^1.6.8"
+    "duckduckgo-ai-chat-cjs": "^1.0.0"
   }
 }
