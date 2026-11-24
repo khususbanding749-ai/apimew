@@ -1,5 +1,5 @@
 const express = require('express');
-const { initChat } = require('duckduckgo-ai-chat-cjs');
+const axios = require('axios');
 
 const app = express();
 app.use(express.json());
@@ -13,15 +13,17 @@ app.get('/api/ai', async (req, res) => {
     }
 
     try {
-        const chat = await initChat("gpt-4o-mini");
-        const message = await chat.fetchFull(q);
+        // Menggunakan API publik Pollinations AI (Gratis & Tanpa Key)
+        const apiUrl = `https://text.pollinations.ai/${encodeURIComponent(q)}`;
+        
+        const response = await axios.get(apiUrl, { timeout: 30000 });
 
         res.json({
             status: true,
             creator: "GrenXharimau",
-            model: "gpt-4o-mini",
+            model: "openai",
             query: q,
-            reply: message
+            reply: response.data // Langsung teks jawabannya
         });
 
     } catch (error) {
