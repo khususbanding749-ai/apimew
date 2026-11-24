@@ -3,7 +3,7 @@ const { initChat } = require('duckduckgo-ai-chat-cjs');
 
 const app = express();
 app.use(express.json());
-const PORT = process.env.PORT || 3001; // Gunakan port berbeda dari API OTP
+const PORT = process.env.PORT || 3000; // Gunakan port berbeda dari API OTP
 
 app.get('/api/ai', async (req, res) => {
     const { q } = req.query;
