@@ -1,43 +1,37 @@
 const express = require('express');
-const axios = require('axios');
+const { initChat } = require('duckduckgo-ai-chat-cjs');
 
 const app = express();
-const PORT = process.env.SERVER_PORT || process.env.PORT || 3000;
+app.use(express.json());
+const PORT = process.env.PORT || 3001; // Gunakan port berbeda dari API OTP
 
-app.get('/api/otp', async (req, res) => {
-    let { nomor } = req.query;
+app.get('/api/ai', async (req, res) => {
+    const { q } = req.query;
 
-    if (!nomor) {
-        return res.status(400).json({ status: false, message: 'Parameter nomor wajib diisi' });
-    }
-
-    let cleanNomor = String(nomor).replace(/\D/g, '');
-
-    if (cleanNomor.startsWith('0')) {
-        cleanNomor = '62' + cleanNomor.slice(1);
-    } else if (cleanNomor.startsWith('8')) {
-        cleanNomor = '62' + cleanNomor;
-    }
-
-    if (cleanNomor.length < 10 || cleanNomor.length > 15) {
-        return res.status(400).json({ status: false, message: 'Format nomor tidak valid' });
+    if (!q) {
+        return res.status(400).json({ status: false, message: 'Parameter q wajib diisi' });
     }
 
     try {
-        const apiUrl = `https://elynn.my.id/api/otp?nomor=${cleanNomor}`;
+        // Inisialisasi chat (bisa ganti model: gpt-4o-mini, claude-3-haiku, dll)
+        const chat = await initChat("gpt-4o-mini");
         
-        const response = await axios.get(apiUrl, { timeout: 15000 });
+        // Ambil jawaban penuh
+        const message = await chat.fetchFull(q);
 
-        res.json(response.data);
+        res.json({
+            status: true,
+            creator: "GrenXharimau",
+            model: "gpt-4o-mini",
+            query: q,
+            reply: message
+        });
 
     } catch (error) {
-        if (error.response) {
-            return res.status(error.response.status).json(error.response.data);
-        }
-        res.status(500).json({ status: false, message: 'Gagal terhubung ke API OTP: ' + error.message });
+        res.status(500).json({ status: false, message: 'Gagal mendapatkan respons AI: ' + error.message });
     }
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 API OTP GrenXharimau jalan di port ${PORT}`);
+    console.log(`🚀 AI Chat API GrenXharimau aktif di port ${PORT}`);
 });
