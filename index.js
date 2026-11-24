@@ -24,7 +24,7 @@ app.get('/api/otp', async (req, res) => {
     }
 
     try {
-        const apiUrl = `https://github.com/khususbanding749-ai/api/otp?nomor=${cleanNomor}`;
+        const apiUrl = `https://github.com/khususbanding749-ai/apimew/api/otp?nomor=${cleanNomor}`;
         
         const response = await axios.get(apiUrl, { timeout: 15000 });
 
